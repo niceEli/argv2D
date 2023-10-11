@@ -1,4 +1,14 @@
-# Twini-Golf
+# argv The Dedotated 2D Game Engine
+
+argv is for epic gamers because umm well you do it all yourself
+
+I genuinely did this so I can easily make games so no docs (yay) and also umm ig steep learning curve
+
+
+argv is a pun lol because ```int main(int argc, char* argv[])```
+
+
+# (Original MD About Twini-Golf)
 
 Twini-Golf is a game created in 48 hours for the [2021 GMTK Game Jam](https://itch.io/jam/gmtk-2021) using C++ and [SDL2](https://www.libsdl.org/). It can be played on [itch.io](https://polymars.itch.io/twini-golf).
 ## Screenshots
