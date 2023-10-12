@@ -29,18 +29,17 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install Mingw-w64
-        uses: ConorMacBride/install-package@v1.1.0
-        with:
-          choco: mingw
+        run: |
+          choco install mingw
 
       - name: Install dependencies
         run: |
-          mingw pacman -Syu --noconfirm mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image mingw-w64-x86_64-SDL2_ttf mingw-w64-x86_64-SDL2_mixer
+          C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\pacman -Syu --noconfirm mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image mingw-w64-x86_64-SDL2_ttf mingw-w64-x86_64-SDL2_mixer
 
       - name: Build
         run: |
-          "C:\msys64\mingw64\bin\g++" -c src/*.cpp -std=c++14 -O3 -Wall -m64 -I include -o bin/release/main.o
-          "C:\msys64\mingw64\bin\g++" bin/release/main.o -o bin/release/main -s -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
+          "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\g++" -c src/*.cpp -std=c++14 -O3 -Wall -m64 -I include -o bin/release/main.o
+          "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\g++" bin/release/main.o -o bin/release/main -s -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 
       - name: Copy resources
         run: |
@@ -48,7 +47,7 @@ jobs:
 
       - name: Copy DLLs
         run: |
-          cp "C:\msys64\mingw64\bin\*.dll" ./bin/release/
+          cp "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\*.dll" ./bin/release/
 
       - name: Upload Windows Binary
         uses: actions/upload-artifact@v2
