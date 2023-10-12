@@ -21,9 +21,8 @@ jobs:
           name: linux
           path: ./bin/release
 
-  build:
+  build-windows:
     runs-on: windows-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -33,7 +32,7 @@ jobs:
           choco install msys2 -y
           refreshenv
           ridk install -q -P msys2 -S bash
-          echo "PATH=$PATH:$(ridk path)" >> $GITHUB_ENV
+          echo ::add-path::$(ridk path)
 
       - name: Install Dependencies
         run: |
@@ -42,13 +41,8 @@ jobs:
       - name: Build Project
         run: |
           g++ -c src/*.cpp -std=c++14 -O3 -Wall -m64 -I include -I /mingw64/include
-          g++ *.o -o bin/release/main.exe -s -L /mingw64/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
-        
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: windows
-          path: ./bin/release
+          g++ *.o -o bin/release/main -s -L /mingw64/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
+          start bin/release/main
 
   build-web:
     runs-on: ubuntu-latest
