@@ -20,9 +20,8 @@ jobs:
         with:
           name: linux
           path: ./bin/release
-
   build-windows:
-    runs-on: windows-latest
+    runs-on: windows-latest # Use Windows runner
 
     steps:
       - uses: actions/checkout@v2
@@ -40,6 +39,13 @@ jobs:
 
       - name: Install Electron Packager
         run: npm install electron-packager -g
+
+      - name: Download and Install Emscripten
+        run: |
+          # Download and install Emscripten
+          curl -O https://s3.amazonaws.com/mozilla-games/emscripten/releases/emsdk-portable.tar.gz
+          tar -xzf emsdk-portable.tar.gz
+          source emsdk/emsdk_env.sh
 
       - name: Compile with Minimal Emscripten Settings
         run: |
@@ -69,6 +75,8 @@ jobs:
 
       - name: Package Electron App as Standalone Exe
         run: electron-packager dist MyElectronApp --platform=win32 --arch=x64 --out=standalone --electron-version=16.0.0
+
+
   build-web:
     runs-on: ubuntu-latest
     steps:
