@@ -29,7 +29,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@master
         with:
-          node-version: 19.80
+          node-version: 19.8.1
       - name: download emscripten build
         uses: aochmann/actions-download-artifact@1.0.4
         with:
@@ -45,7 +45,7 @@ jobs:
       - name: build
         run: |
           cd ./argv
-          npx electron-packager ./ argv --platform=win32 --arch=x64
+          npx electron-packager ./ argv --platform=win32 --arch=x64 --electron-version=node
           cd ..
       - name: upload artifacts
         uses: actions/upload-artifact@v2
