@@ -23,6 +23,7 @@ jobs:
 
   build_on_win:
     runs-on: windows-latest
+    needs: build-web
     steps:
       - uses: actions/checkout@master
         with:
