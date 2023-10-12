@@ -45,7 +45,7 @@ jobs:
       - name: build
         run: |
           cd ./argv
-          npx electron-packager ./ argv --platform=win32 --arch=x64 --electron-version=node
+          npx electron-packager ./ argv --platform=win32 --arch=x64 --electron-version=26.4.0
           cd ..
       - name: upload artifacts
         uses: actions/upload-artifact@v2
