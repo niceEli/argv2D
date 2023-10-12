@@ -21,61 +21,28 @@ jobs:
           name: linux
           path: ./bin/release
 
-  build_on_win:
+  build-windows:
     runs-on: windows-latest
-    needs: build-web
     steps:
-      - uses: actions/checkout@v2
-      - name: setup node
-        uses: actions/setup-node@master
-        with:
-          node-version: 19.8.1
-      - name: download emscripten build
-        uses: aochmann/actions-download-artifact@1.0.4
-        with:
-          path: ./argv
-          name: emscripten
-      - name: create-package-json
-          run: |
-            echo '{' > package.json
-            echo '  "name": "argv",' >> package.json
-            echo '  "version": "1.0.0",' >> package.json
-            echo '  "description": "argv Game Engine",' >> package.json
-            echo '  "main": "index.html",' >> package.json
-            echo '  "scripts": {' >> package.json
-            echo '    "start": "electron .",' >> package.json
-            echo '    "package-electron": "npx electron-packager . argv --platform=win32 --arch=x64",' >> package.json
-            echo '    "test": "echo '\''No tests available'\''",' >> package.json
-            echo '    "lint": "eslint ."' >> package.json
-            echo '  },' >> package.json
-            echo '  "author": "niceEli",' >> package.json
-            echo '  "license": "Polymars Licence",' >> package.json
-            echo '  "dependencies": {' >> package.json
-            echo '    "electron": "26.4.0"' >> package.json
-            echo '  },' >> package.json
-            echo '  "devDependencies": {' >> package.json
-            echo '    "electron-packager": "17.1.2"' >> package.json
-            echo '  }' >> package.json
-            echo '}' >> package.json
-          shell: bash
-      - name: npm init
-        run: |
-          cd ./argv
-          echo
-          npm install
-          npm install electron-packager
-          cd ..
-      - name: build
-        run: |
-          cd ./argv
-          npx electron-packager ./ argv --platform=win32 --arch=x64 --electron-version=26.4.0
-          cd ..
-      - name: upload artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: windows
-          path: ./argv/argv-win32-x64
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
+      - name: Install MSYS2
+        run: |
+          choco install msys2 -y
+          refreshenv
+          ridk install -q -P msys2 -S bash
+          echo ::add-path::$(ridk path)
+
+      - name: Install Dependencies
+        run: |
+          pacman -Sy --noconfirm mingw-w64-x86_64-toolchain mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_ttf mingw-w64-x86_64-SDL2_mixer mingw-w64-x86_64-SDL2_image
+
+      - name: Build Project
+        run: |
+          g++ -c src/*.cpp -std=c++14 -O3 -Wall -m64 -I include -I /mingw64/include
+          g++ *.o -o bin/release/main -s -L /mingw64/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
+          start bin/release/main
 
   build-web:
     runs-on: ubuntu-latest
