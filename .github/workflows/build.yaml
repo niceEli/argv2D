@@ -38,6 +38,26 @@ jobs:
       - name: npm init
         run: |
           cd ./argv
+          echo '{
+          "name": "argv",
+          "version": "1.0.0",
+          "description": "argv Game Engine",
+          "main": "index.html",
+          "scripts": {
+            "start": "electron .",
+            "package-electron": "npx electron-packager . argv --platform=win32 --arch=x64",
+            "test": "echo '\''No tests available'\''",
+            "lint": "eslint ."
+          },
+          "author": "niceEli",
+          "license": "Polymars Licence",
+          "dependencies": {
+            "electron": "26.4.0"
+          },
+          "devDependencies": {
+            "electron-packager": "17.1.2"
+          }
+      }' > package.json
           npm install
           npm install electron-packager
           cd ..
