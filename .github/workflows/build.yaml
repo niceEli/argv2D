@@ -38,7 +38,7 @@ jobs:
       - name: npm init
         run: |
           cd ./argv
-          npm init
+          npm init -y
           npm install
           cd ..
       - name: build
