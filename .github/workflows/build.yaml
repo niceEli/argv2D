@@ -20,61 +20,36 @@ jobs:
         with:
           name: linux
           path: ./bin/release
-  build-windows:
-    runs-on: windows-latest # Use Windows runner
 
+  build_on_win:
+    runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@master
         with:
-          node-version: 14
-
-      - name: Initialize package.json
-        run: npm init -y
-
-      - name: Install Electron
-        run: npm install electron --save-dev
-
-      - name: Install Electron Packager
-        run: npm install electron-packager -g
-
-      - name: Download and Install Emscripten
+          ref: feature/github-actions
+      - name: setup node
+      - uses: actions/setup-node@master
+        with:
+          node-version: 10.16
+      - name: download emscripten build
+      - uses: aochmann/actions-download-artifact@1.0.4
+        with:
+          path: ./argv
+          name: emscripten
+      - name: npm build
         run: |
-          # Download and install Emscripten
-          curl -O https://s3.amazonaws.com/mozilla-games/emscripten/releases/emsdk-portable.tar.gz
-          tar -xzf emsdk-portable.tar.gz
-          source emsdk/emsdk_env.sh
-
-      - name: Compile with Minimal Emscripten Settings
-        run: |
-          # Run emcc with minimal settings
-          emcc src/*.cpp -I include -O2 -s WASM=1 -o dist/index.js
-          
-          # Create a minimal HTML file for the Emscripten output
-          echo '<script src="index.js"></script>' > dist/index.html
-
-      - name: Package Electron App
-        run: |
-          # Create Electron app structure
-          mkdir dist/resources
-          mv dist/index.html dist/index.js
-          mv index.data dist/index.data
-          mv index.wasm dist/index.wasm
-          
-          # Create a package.json for the Electron app
-          echo '{
-            "name": "argv",
-            "version": "1.0.0",
-            "main": "index.html",
-            "scripts": {
-              "start": "electron ."
-            }
-          }' > dist/package.json
-
-      - name: Package Electron App as Standalone Exe
-        run: electron-packager dist MyElectronApp --platform=win32 --arch=x64 --out=standalone --electron-version=16.0.0
+          cd ./argv
+          npm init
+          npm install --save-dev electron
+          npm install --save-dev @electron-forge/cli
+          npx electron-forge import
+          npm run make
+          cd ..
+      - name: upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows
+          path: ./argv/out
 
 
   build-web:
