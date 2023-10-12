@@ -25,15 +25,28 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - name: install Scoop
-        run: |
-          iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
       - name: setup
         run: |
+          # Create a user directory for Scoop
+          mkdir $HOME\Scoop
+          mkdir $HOME\Scoop\apps
+          mkdir $HOME\Scoop\buckets
+          
+          # Download and extract Scoop into the user directory
+          Invoke-WebRequest -Uri 'https://github.com/lukesampson/scoop/archive/master.zip' -OutFile $HOME\scoop-master.zip
+          Expand-Archive -Path $HOME\scoop-master.zip -DestinationPath $HOME\Scoop
+          
+          # Set up the user's PowerShell profile to include Scoop
+          Add-Content -Path $PROFILE.AllUsersAllHosts -Value "`n`n. $HOME\Scoop\apps\scoop\current\bin\scoop.ps1"
+      - name: install Scoop buckets
+        run: |
           scoop bucket add extras
+          scoop bucket add versions
+      - name: install dependencies
+        run: |
           scoop install mingw
           scoop install sdl2 sdl2_image sdl2_ttf sdl2_mixer
-          $env:PATH += ';C:\Program Files\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin'
+          $env:PATH += ';C:\ProgramData\scoop\shims'
           mkdir -p bin/release
       - name: build
         run: |
