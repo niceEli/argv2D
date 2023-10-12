@@ -28,11 +28,11 @@ jobs:
         with:
           ref: feature/github-actions
       - name: setup node
-      - uses: actions/setup-node@master
+        uses: actions/setup-node@master
         with:
           node-version: 10.16
       - name: download emscripten build
-      - uses: aochmann/actions-download-artifact@1.0.4
+        uses: aochmann/actions-download-artifact@1.0.4
         with:
           path: ./argv
           name: emscripten
