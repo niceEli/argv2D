@@ -40,6 +40,8 @@ jobs:
           cd ./argv
           npm init -y
           npm install
+          npm install --save-dev @electron-forge/cli
+          npx electron-forge import
           cd ..
       - name: build
         run: |
