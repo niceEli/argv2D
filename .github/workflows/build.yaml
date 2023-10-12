@@ -35,13 +35,15 @@ jobs:
         with:
           path: ./argv
           name: emscripten
-      - name: npm build
+      - name: npm init
         run: |
           cd ./argv
           npm init
-          npm install --save-dev electron
-          npm install --save-dev @electron-forge/cli
-          npx electron-forge import
+          npm install
+          cd ..
+      - name: build
+        run: |
+          cd ./argv
           npm run make
           cd ..
       - name: upload artifacts
