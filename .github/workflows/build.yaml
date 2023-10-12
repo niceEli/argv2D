@@ -29,7 +29,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@master
         with:
-          node-version: 10.16
+          node-version: 19.80
       - name: download emscripten build
         uses: aochmann/actions-download-artifact@1.0.4
         with:
