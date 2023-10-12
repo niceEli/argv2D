@@ -21,6 +21,29 @@ jobs:
           name: linux
           path: ./bin/release
 
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: setup
+        run: |
+          scoop bucket add extras
+          scoop install mingw
+          scoop install sdl2 sdl2_image sdl2_ttf sdl2_mixer
+          $env:PATH += ';C:\Program Files\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin'
+          mkdir -p bin/release
+      - name: build
+        run: |
+          g++ -c src/*.cpp -std=c++14 -O3 -Wall -m64 -I include -I C:/SDL2-w64/include && g++ *.o -o bin/release/main -s -L C:/SDL2-w64/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
+      - name: copy resources
+        run: |
+          cp -vr ./res/ ./bin/release/
+      - name: Upload Windows Binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows
+          path: ./bin/release
+
   build-web:
     runs-on: ubuntu-latest
     steps:
@@ -32,11 +55,11 @@ jobs:
           git clone https://github.com/emscripten-core/emsdk.git && cd emsdk && git pull && ./emsdk install latest && ./emsdk activate latest && source ./emsdk_env.sh && cd ..
       - name: build
         run: |
-          source ./emsdk/emsdk_env.sh && emcc src/main.cpp src/entity.cpp src/renderwindow.cpp src/ball.cpp src/tile.cpp src/hole.cpp -I include -O2 -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s 'SDL2_IMAGE_FORMATS=["png"]' -s USE_SDL_TTF=2 -s USE_SDL_MIXER=2 --preload-file res -o index.html
+          source ./emsdk/emsdk_env.sh && emcc src/main.cpp src/entity.cpp src/renderwindow.cpp src/ball.cpp src.tile.cpp src.hole.cpp -I include -O2 -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s 'SDL2_IMAGE_FORMATS=["png"]' -s USE_SDL_TTF=2 -s USE_SDL_MIXER=2 --preload-file res -o index.html
       - name: copy files to folder
         run: |
           mkdir emscripten && cp ./index.data ./emscripten && cp ./index.html ./emscripten  && cp ./index.js ./emscripten  && cp ./index.wasm ./emscripten
-      - name: Upload linux Binary
+      - name: Upload Web Binary
         uses: actions/upload-artifact@v2
         with:
           name: emscripten
