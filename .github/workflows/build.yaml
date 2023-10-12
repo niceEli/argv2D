@@ -25,7 +25,7 @@ jobs:
     runs-on: windows-latest
     needs: build-web
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
         with:
           ref: feature/github-actions
       - name: setup node
