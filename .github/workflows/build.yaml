@@ -26,8 +26,6 @@ jobs:
     needs: build-web
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: feature/github-actions
       - name: setup node
         uses: actions/setup-node@master
         with:
