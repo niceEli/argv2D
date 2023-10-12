@@ -21,27 +21,54 @@ jobs:
           name: linux
           path: ./bin/release
 
-  build-windows-react:
-    runs-on: ubuntu-latest
-    needs: build-web
+  build-windows:
+    runs-on: windows-latest
+
     steps:
       - uses: actions/checkout@v2
-      - name: Install Node.js
+
+      - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: 14
+
       - name: Initialize package.json
         run: npm init -y
-      - name: Install Electron Builder
-        run: npm install electron-builder --save-dev
-      - name: Package Emscripten Build as Electron App
-        run: npx electron-builder
-      - name: Upload Windows React App
-        uses: actions/upload-artifact@v2
-        with:
-          name: windows-react
-          path: ./dist
 
+      - name: Install Electron
+        run: npm install electron --save-dev
+
+      - name: Install Electron Packager
+        run: npm install electron-packager -g
+
+      - name: Compile with Minimal Emscripten Settings
+        run: |
+          # Run emcc with minimal settings
+          emcc src/*.cpp -I include -O2 -s WASM=1 -o dist/index.js
+          
+          # Create a minimal HTML file for the Emscripten output
+          echo '<script src="index.js"></script>' > dist/index.html
+
+      - name: Package Electron App
+        run: |
+          # Create Electron app structure
+          mkdir dist/resources
+          mv dist/index.html dist/index.js
+          mv index.data dist/index.data
+          mv index.wasm dist/index.wasm
+          
+          # Create a package.json for the Electron app
+          echo '{
+            "name": "argv",
+            "version": "1.0.0",
+            "main": "index.html",
+            "scripts": {
+              "start": "electron ."
+            }
+          }' > dist/package.json
+
+      - name: Package Electron App as Standalone Exe
+        run: electron-packager dist MyElectronApp --platform=win32 --arch=x64 --out=standalone --electron-version=16.0.0
   build-web:
     runs-on: ubuntu-latest
     steps:
