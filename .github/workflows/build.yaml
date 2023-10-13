@@ -51,8 +51,8 @@ jobs:
 
       - name: Copy DLLs
         run: |
-          cp "C:\tools\msys64\mingw64\bin"/*.dll ./bin/release/
-
+          Get-ChildItem -Path "C:\tools\msys64\mingw64\bin\*" -Include *.dll -Recurse | Copy-Item -Destination ./bin/release/
+          
       - name: Upload Windows Binary
         uses: actions/upload-artifact@v2
         with:
