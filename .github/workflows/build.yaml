@@ -40,14 +40,14 @@ jobs:
       - name: Build
         run: |
           mkdir .\bin\release
-          C:\msys64\msys2_shell.cmd -mintty -mingw64
+          C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start
           g++ -c src/*.cpp -std=c++20 -O3 -Wall -m64 -I include -I C:\tools\msys64\mingw64\include\SDL2
           g++ *.o -o .\main -s -L C:/SDL2-w64/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
           exit
           cp .\main.exe .\bin\release
       - name: Copy resources
         run: |
-          cp -vr ./res/ ./bin/release/
+          cp ./res/ ./bin/release/
 
       - name: Copy DLLs
         run: |
