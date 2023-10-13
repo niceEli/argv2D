@@ -35,7 +35,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          C:\tools\msys64\usr\bin\bash.exe -lc "pacman -S --noconfirm SDL2 SDL2_image SDL2_ttf SDL2_mixer"
+          C:\tools\msys64\usr\bin\bash.exe -lc "pacman -Syu --noconfirm mingw-w64-SDL2 mingw-w64-SDL2_image mingw-w64-SDL2_ttf mingw-w64-SDL2_mixer"
 
       - name: Build
         run: |
