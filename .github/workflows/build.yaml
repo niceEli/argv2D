@@ -40,8 +40,8 @@ jobs:
       - name: Build
         run: |
           mkdir /bin/release
-          C:\tools\msys64\mingw64\bin\g++.exe -c src/*.cpp -std=c++14 -O3 -Wall -m64 -I include -I C:\tools\msys64\mingw64\include\SDL2
-          C:\tools\msys64\mingw64\bin\g++.exe *.o -o bin/release/main -s -L C:/SDL2-w64/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
+          C:\msys64\msys2_shell.cmd -mintty -mingw64 start "C:\tools\msys64\mingw64\bin\g++.exe -c src/*.cpp -std=c++14 -O3 -Wall -m64 -I include -I C:\tools\msys64\mingw64\include\SDL2"
+          C:\tools\msys64\mingw64\bin\g++.exe *.o -o ./bin/release/main -s -L C:/SDL2-w64/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
       - name: Copy resources
         run: |
           cp -vr ./res/ ./bin/release/
