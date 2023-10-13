@@ -35,12 +35,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          C:\tools\msys64\usr\bin\pacman.exe -Syu --noconfirm mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image mingw-w64-x86_64-SDL2_ttf mingw-w64-x86_64-SDL2_mixer
+          C:\tools\msys64\usr\bin\pacman.exe -Syu --noconfirm mingw-w64-x86_64-gcc mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image mingw-w64-x86_64-SDL2_ttf mingw-w64-x86_64-SDL2_mixer
 
       - name: Build
         run: |
-          C:\tools\msys64\mingw64\bin\c++.exe -c src/*.cpp -std=c++14 -O3 -Wall -m64 -I include -o bin/release/main.o
-          C:\tools\msys64\mingw64\bin\c++.exe bin/release/main.o -o bin/release/main -s -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
+          C:\tools\msys64\mingw64\bin\g++.exe -c src/*.cpp -std=c++14 -O3 -Wall -m64 -I include -o bin/release/main.o
+          C:\tools\msys64\mingw64\bin\g++.exe bin/release/main.o -o bin/release/main -s -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 
       - name: Copy resources
         run: |
