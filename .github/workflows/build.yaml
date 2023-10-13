@@ -31,21 +31,16 @@ jobs:
       - name: Install MSYS2
         run: |
           choco install msys2
-          export MSYS2_PATH="C:\tools\msys64"
-          export MSYS2_ARCH=mingw64
-
-      - name: Update MSYS2
-        run: |
-          $MSYS2_PATH\usr\bin\bash.exe -lc "pacman -Syu --noconfirm"
+          C:\tools\msys64\usr\bin\bash.exe -lc "pacman -Syu --noconfirm"
 
       - name: Install dependencies
         run: |
-          $MSYS2_PATH\usr\bin\bash.exe -lc "pacman -S --noconfirm mingw-w64-$MSYS2_ARCH-SDL2 mingw-w64-$MSYS2_ARCH-SDL2_image mingw-w64-$MSYS2_ARCH-SDL2_ttf mingw-w64-$MSYS2_ARCH-SDL2_mixer"
+          C:\tools\msys64\usr\bin\bash.exe -lc "pacman -S --noconfirm mingw-w64-mingw64-SDL2 mingw-w64-mingw64-SDL2_image mingw-w64-mingw64-SDL2_ttf mingw-w64-mingw64-SDL2_mixer"
 
       - name: Build
         run: |
-          $MSYS2_PATH\$MSYS2_ARCH\usr\bin\g++ -c src/*.cpp -std=c++14 -O3 -Wall -m64 -I include -o bin/release/main.o
-          $MSYS2_PATH\$MSYS2_ARCH\usr\bin\g++ bin/release/main.o -o bin/release/main -s -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
+          C:\tools\msys64\mingw64\bin\g++ -c src/*.cpp -std=c++14 -O3 -Wall -m64 -I include -o bin/release/main.o
+          C:\tools\msys64\mingw64\bin\g++ bin/release/main.o -o bin/release/main -s -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 
       - name: Copy resources
         run: |
@@ -53,7 +48,7 @@ jobs:
 
       - name: Copy DLLs
         run: |
-          cp "$MSYS2_PATH\$MSYS2_ARCH\usr\bin"/*.dll ./bin/release/
+          cp "C:\tools\msys64\mingw64\bin"/*.dll ./bin/release/
 
       - name: Upload Windows Binary
         uses: actions/upload-artifact@v2
