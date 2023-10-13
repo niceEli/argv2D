@@ -41,8 +41,8 @@ jobs:
         run: |
           mkdir .\bin\release
           C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start
-          g++ -c src/*.cpp -std=c++20 -O3 -Wall -m64 -I include -I C:\tools\msys64\mingw64\include\SDL2
-          g++ *.o -o .\main -s -L C:\tools\msys64\mingw64\lib\sdl2 -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
+          g++ -c src/*.cpp -std=c++20 -O3 -Wall -m64 -I include -I \include\SDL2
+          g++ *.o -o .\main -s -L \lib\sdl2 -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
           exit
 
       - name: Copy DLLs
