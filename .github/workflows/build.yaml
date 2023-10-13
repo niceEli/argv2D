@@ -28,18 +28,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install Mingw-w64
+      - name: Install MSYS2
         run: |
-          choco install mingw
+          choco install msys2
+          export MSYS2_PATH="C:\tools\msys64"
+          export MSYS2_ARCH=mingw64
+
+      - name: Update MSYS2
+        run: |
+          $MSYS2_PATH\usr\bin\bash.exe -lc "pacman -Syu --noconfirm"
 
       - name: Install dependencies
         run: |
-          C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\pacman -Syu --noconfirm mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image mingw-w64-x86_64-SDL2_ttf mingw-w64-x86_64-SDL2_mixer
+          $MSYS2_PATH\usr\bin\bash.exe -lc "pacman -S --noconfirm mingw-w64-$MSYS2_ARCH-SDL2 mingw-w64-$MSYS2_ARCH-SDL2_image mingw-w64-$MSYS2_ARCH-SDL2_ttf mingw-w64-$MSYS2_ARCH-SDL2_mixer"
 
       - name: Build
         run: |
-          "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\g++" -c src/*.cpp -std=c++14 -O3 -Wall -m64 -I include -o bin/release/main.o
-          "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\g++" bin/release/main.o -o bin/release/main -s -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
+          $MSYS2_PATH\$MSYS2_ARCH\usr\bin\g++ -c src/*.cpp -std=c++14 -O3 -Wall -m64 -I include -o bin/release/main.o
+          $MSYS2_PATH\$MSYS2_ARCH\usr\bin\g++ bin/release/main.o -o bin/release/main -s -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 
       - name: Copy resources
         run: |
@@ -47,7 +53,7 @@ jobs:
 
       - name: Copy DLLs
         run: |
-          cp "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\*.dll" ./bin/release/
+          cp "$MSYS2_PATH\$MSYS2_ARCH\usr\bin"/*.dll ./bin/release/
 
       - name: Upload Windows Binary
         uses: actions/upload-artifact@v2
