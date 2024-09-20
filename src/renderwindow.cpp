@@ -49,10 +49,10 @@ void RenderWindow::render(Entity& p_entity)
 	src.h = p_entity.getCurrentFrame().h;
 
 	SDL_Rect dst;
-	dst.x = p_entity.getPos().x + (p_entity.getCurrentFrame().w - p_entity.getCurrentFrame().w*p_entity.getScale().x)/2;
-	dst.y = p_entity.getPos().y + (p_entity.getCurrentFrame().h - p_entity.getCurrentFrame().h*p_entity.getScale().y)/2;
-	dst.w = p_entity.getCurrentFrame().w*p_entity.getScale().x;
-	dst.h = p_entity.getCurrentFrame().h*p_entity.getScale().y;
+	dst.x = static_cast<int>(p_entity.getPos().x + (p_entity.getCurrentFrame().w - p_entity.getCurrentFrame().w*p_entity.getScale().x)/2);
+	dst.y = static_cast<int>(p_entity.getPos().y + (p_entity.getCurrentFrame().h - p_entity.getCurrentFrame().h*p_entity.getScale().y)/2);
+	dst.w = static_cast<int>(p_entity.getCurrentFrame().w * p_entity.getScale().x);
+	dst.h = static_cast<int>(p_entity.getCurrentFrame().h * p_entity.getScale().y);
 
 	SDL_RenderCopyEx(renderer, p_entity.getTex(), &src, &dst, p_entity.getAngle(), 0, SDL_FLIP_NONE);
 }
@@ -88,8 +88,8 @@ void RenderWindow::render(float p_x, float p_y, const char* p_text, TTF_Font* fo
 		src.h = surfaceMessage->h; 
 
 		SDL_Rect dst;
-		dst.x = p_x;
-		dst.y = p_y;
+		dst.x = static_cast<int>(p_x);
+		dst.y = static_cast<int>(p_y);
 		dst.w = src.w;
 		dst.h = src.h;
 
@@ -110,8 +110,8 @@ void RenderWindow::renderCenter(float p_x, float p_y, const char* p_text, TTF_Fo
 		src.h = surfaceMessage->h; 
 
 		SDL_Rect dst;
-		dst.x = 640/2 - src.w/2 + p_x;
-		dst.y = 480/2 - src.h/2 + p_y;
+		dst.x = static_cast<int>(640/2 - src.w/2 + p_x);
+		dst.y = static_cast<int>(480/2 - src.h/2 + p_y);
 		dst.w = src.w;
 		dst.h = src.h;
 

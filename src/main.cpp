@@ -4,6 +4,7 @@
 #include <SDL2/SDL_mixer.h>
 #include <iostream>
 #include <vector>
+#include <fmt/core.h>
 
 #include "RenderWindow.h"
 #include "Entity.h"
@@ -17,7 +18,7 @@ bool init()
 		std::cout << "HEY.. SDL_Init HAS FAILED. SDL_ERROR: " << SDL_GetError() << std::endl;
 	if (!(IMG_Init(IMG_INIT_PNG)))
 		std::cout << "IMG_init has failed. Error: " << SDL_GetError() << std::endl;
-	if (!(TTF_Init()))
+	if (TTF_Init() == -1)
 		std::cout << "TTF_init has failed. Error: " << SDL_GetError() << std::endl;
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 	return true;
@@ -206,7 +207,7 @@ const char* getStrokeText()
 	{
 		biggestStroke = balls[0].getStrokes();
 	}
-	std::string s = std::to_string(biggestStroke);
+	std::string s = fmt::to_string(biggestStroke);
 	s = "STROKES: " + s;
 	return s.c_str();
 }
@@ -218,7 +219,7 @@ const char* getLevelText(int side)
 	{
 		tempLevel++;
 	}
-	std::string s = std::to_string(tempLevel);
+	std::string s = fmt::to_string(tempLevel);
 	s = "HOLE: " + s;
 	return s.c_str();
 }
@@ -281,7 +282,7 @@ void graphics()
 	{
 		if (!b.isWin())
 		{
-			window.render(b.getPos().x, b.getPos().y + 4, ballShadowTexture);
+			window.render(static_cast<int>(b.getPos().x), static_cast<int>(b.getPos().y + 4), ballShadowTexture);
 		}
 		for (Entity& e : b.getPoints())
 		{
@@ -299,7 +300,7 @@ void graphics()
 		{
 			window.render(e);
 		}
-		window.render(b.getPowerBar().at(0).getPos().x, b.getPowerBar().at(0).getPos().y, powerMeterTexture_overlay);
+		window.render(static_cast<int>(b.getPowerBar().at(0).getPos().x), static_cast<int>(b.getPowerBar().at(0).getPos().y), powerMeterTexture_overlay);
 		
 	}
 	if (state != 2)
@@ -384,7 +385,7 @@ void titleScreen()
 		}
 		window.clear();
 		window.render(0, 0, bgTexture);
-		window.render(320 - 160, 240 - 100 - 50 + 4*SDL_sin(SDL_GetTicks()*(3.14/1500)), logoTexture);
+		window.render(320 - 160, 240 - 100 - 50 + static_cast<int>(4*SDL_sin(SDL_GetTicks()*(3.14/1500))), logoTexture);
 		window.render(0, 0, click2start);
 		window.renderCenter(0, 240 - 48 + 3 - 16*5, "LEFT CLICK TO START", font32, black);
 		window.renderCenter(0, 240 - 48 - 16*5, "LEFT CLICK TO START", font32, white);
